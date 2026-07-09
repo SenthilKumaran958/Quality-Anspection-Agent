@@ -3,149 +3,513 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel — Quality Inspection Agent</title>
+  <title>Admin Panel — Quality AI Inspection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Admin-specific overrides ── */
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .admin-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+    .admin-header p {
+      font-size: 13px;
+      color: #64748b;
+      margin: 2px 0 0;
+    }
+    .admin-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ── Stat cards ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .stat-grid { grid-template-columns: 1fr; } }
+
+    .stat-tile {
+      background: #fff;
+      border: 1px solid #e8edf4;
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .stat-tile:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,.07);
+      transform: translateY(-2px);
+    }
+    .stat-tile-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .stat-tile-icon.purple { background: #ede9fe; }
+    .stat-tile-icon.green  { background: #dcfce7; }
+    .stat-tile-icon.red    { background: #fee2e2; }
+    .stat-tile-icon.amber  { background: #fef9c3; }
+    .stat-tile-body { flex: 1; }
+    .stat-tile-value {
+      font-size: 28px; font-weight: 800;
+      color: #0f172a; line-height: 1;
+    }
+    .stat-tile-label {
+      font-size: 12px; font-weight: 500;
+      color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .stat-tile-sub {
+      font-size: 11px; color: #10b981; font-weight: 600; margin-top: 2px;
+    }
+    .stat-tile-sub.bad { color: #ef4444; }
+
+    /* ── Content grid ── */
+    .admin-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 20px;
+    }
+    @media (max-width: 960px) { .admin-grid { grid-template-columns: 1fr; } }
+
+    /* ── Panel card ── */
+    .panel {
+      background: #fff;
+      border: 1px solid #e8edf4;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .panel-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .panel-title {
+      font-size: 14px; font-weight: 700; color: #0f172a;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .panel-title-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .panel-title-dot.red    { background: #ef4444; }
+    .panel-title-dot.purple { background: #8b5cf6; }
+    .panel-body { padding: 20px; }
+
+    /* ── Defect bar ── */
+    .defect-row { margin-bottom: 14px; }
+    .defect-row:last-child { margin-bottom: 0; }
+    .defect-meta {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: #334155; font-weight: 500; margin-bottom: 5px;
+    }
+    .defect-meta span:last-child {
+      color: #64748b; font-weight: 400;
+    }
+    .defect-bar-track {
+      background: #f1f5f9; border-radius: 999px; height: 7px; overflow: hidden;
+    }
+    .defect-bar-fill {
+      height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      transition: width .8s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── Users table ── */
+    .user-table { width: 100%; border-collapse: collapse; }
+    .user-table th {
+      background: #f8fafc; font-size: 11px; font-weight: 600;
+      color: #94a3b8; text-transform: uppercase; letter-spacing: .5px;
+      padding: 10px 14px; text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .user-table td {
+      padding: 12px 14px; font-size: 13px; color: #334155;
+      border-bottom: 1px solid #f8fafc; vertical-align: middle;
+    }
+    .user-table tr:last-child td { border-bottom: none; }
+    .user-table tr:hover td { background: #fafbff; }
+    .user-avatar-cell {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .user-avatar-mini {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .user-name-cell strong { display: block; font-weight: 600; color: #0f172a; }
+    .user-name-cell span   { font-size: 11px; color: #94a3b8; }
+
+    /* ── Role / status badges ── */
+    .badge-role {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .badge-role.admin    { background: #ede9fe; color: #7c3aed; }
+    .badge-role.operator { background: #dbeafe; color: #1d4ed8; }
+    .badge-status {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+    }
+    .badge-status::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+    }
+    .badge-status.active  { background: #dcfce7; color: #16a34a; }
+    .badge-status.active::before  { background: #16a34a; }
+    .badge-status.inactive { background: #fee2e2; color: #dc2626; }
+    .badge-status.inactive::before { background: #dc2626; }
+
+    /* ── Toggle button ── */
+    .toggle-btn {
+      font-size: 11px; font-weight: 600; padding: 5px 12px;
+      border-radius: 6px; border: 1px solid #e2e8f0; cursor: pointer;
+      background: #fff; color: #475569; transition: all .15s;
+    }
+    .toggle-btn:hover:not(:disabled) { background: #f1f5f9; }
+    .toggle-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* ── Skeleton loader ── */
+    .skeleton {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .sk-line { height: 14px; margin-bottom: 8px; }
+    .sk-val  { height: 32px; width: 60px; border-radius: 8px; }
+
+    /* ── Error state ── */
+    .state-error {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 40px 20px; gap: 8px;
+    }
+    .state-error .err-icon { font-size: 36px; }
+    .state-error p { font-size: 13px; color: #64748b; margin: 0; text-align: center; }
+    .state-error strong { font-size: 15px; color: #0f172a; }
+    .retry-btn {
+      margin-top: 8px; font-size: 12px; font-weight: 600;
+      padding: 7px 16px; border-radius: 8px; border: 1px solid #e2e8f0;
+      background: #fff; color: #475569; cursor: pointer; transition: all .15s;
+    }
+    .retry-btn:hover { background: #f8fafc; }
+
+    /* ── Empty state ── */
+    .state-empty {
+      text-align: center; padding: 40px 20px; color: #94a3b8; font-size: 13px;
+    }
+  </style>
 </head>
 <body>
 
 <div class="app-layout">
-  
+
   <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <div class="logo-icon">🔍</div>
+      <div class="logo-icon">🔬</div>
       <div class="logo-text">
-        <span class="logo-title">QUALITY AI</span>
-        <span class="logo-sub">Inspection Agent</span>
+        <div class="logo-title">QUALITY AI</div>
+        <div class="logo-sub">Inspection Agent</div>
       </div>
     </div>
-    
     <nav class="sidebar-nav">
       <div class="nav-section-label">Main Menu</div>
-      <a href="dashboard.html" class="nav-item">
-        <span class="nav-icon">📊</span> Dashboard
-      </a>
-      <a href="inspection.html" class="nav-item">
-        <span class="nav-icon">📸</span> New Inspection
-      </a>
-      <a href="history.html" class="nav-item">
-        <span class="nav-icon">📋</span> History
-      </a>
-      <a href="reports.html" class="nav-item">
-        <span class="nav-icon">📄</span> Reports
-      </a>
-      
-      <div class="nav-section-label" style="margin-top: 16px;">Management</div>
-      <a href="admin.html" class="nav-item active" id="nav-admin">
-        <span class="nav-icon">⚙️</span> Admin Panel
-      </a>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="inspection.html" class="nav-item"><span class="nav-icon">🔍</span> New Inspection</a>
+      <a href="history.html" class="nav-item"><span class="nav-icon">📋</span> History</a>
+      <a href="reports.html" class="nav-item"><span class="nav-icon">📄</span> Reports</a>
+      <div class="nav-section-label" style="margin-top:20px;">Management</div>
+      <a href="admin.html" class="nav-item active"><span class="nav-icon">⚙️</span> Admin Panel</a>
     </nav>
-    
     <div class="sidebar-footer">
       <div class="user-card">
-        <div class="user-avatar" id="sidebar-user-avatar">?</div>
+        <div class="user-avatar" id="user-initial">A</div>
         <div class="user-info">
-          <div class="user-name" id="sidebar-user-name">Loading...</div>
-          <div class="user-role" id="sidebar-user-role">...</div>
+          <div class="user-name" id="user-display-name">Admin</div>
+          <div class="user-role" id="user-display-role">ADMIN</div>
         </div>
-        <button class="btn-logout" id="btn-logout" title="Logout">🚪</button>
+        <button class="btn-logout" onclick="logout()" title="Logout">↩</button>
       </div>
     </div>
   </aside>
 
   <!-- Main Content -->
-  <main class="main-content">
-    
-    <!-- Topbar -->
-    <header class="topbar">
-      <div class="topbar-title">Admin Panel <span class="topbar-subtitle">System Management & Advanced Analytics</span></div>
-    </header>
-    
-    <!-- Page Content -->
-    <div class="page-content">
-      
-      <div id="admin-alert" class="alert"></div>
-
-      <!-- Stats Row -->
-      <div class="stat-cards">
-        <div class="stat-card blue">
-          <div class="stat-info">
-            <div class="stat-value" id="admin-users">-</div>
-            <div class="stat-label">Total Users</div>
-          </div>
-          <div class="stat-icon blue">👥</div>
-        </div>
-        
-        <div class="stat-card green">
-          <div class="stat-info">
-            <div class="stat-value" id="admin-inspections">-</div>
-            <div class="stat-label">Total Inspections</div>
-          </div>
-          <div class="stat-icon green">📦</div>
-        </div>
-        
-        <div class="stat-card red">
-          <div class="stat-info">
-            <div class="stat-value" id="admin-defective">-</div>
-            <div class="stat-label">Defective Parts</div>
-          </div>
-          <div class="stat-icon red">⚠️</div>
-        </div>
-        
-        <div class="stat-card yellow">
-          <div class="stat-info">
-            <div class="stat-value" id="admin-reports">-</div>
-            <div class="stat-label">Generated Reports</div>
-          </div>
-          <div class="stat-icon yellow">📄</div>
-        </div>
+  <div class="main-content">
+    <div class="topbar">
+      <div>
+        <span class="topbar-title">Admin Panel</span>
+        <span class="topbar-subtitle">System management &amp; analytics</span>
       </div>
-
-      <div class="grid-2">
-        <!-- Defect Trends List -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">Top Defect Types</div>
-          </div>
-          <div class="card-body">
-            <div id="defect-trends-container">
-              <div class="text-muted">Loading trends...</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- User Management Table -->
-        <div class="card">
-          <div class="card-header">
-            <div class="card-title">User Management</div>
-          </div>
-          <div class="card-body" style="padding-top: 16px;">
-            <div class="table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Inspections</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody id="users-table-body">
-                  <tr><td colspan="5" class="text-center text-muted py-4">Loading users...</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <div class="topbar-actions">
+        <span class="admin-badge">⚡ Admin Access</span>
       </div>
-      
     </div>
-  </main>
-</div>
+
+    <div class="page-content">
+
+      <!-- Header -->
+      <div class="admin-header">
+        <div>
+          <h1>System Overview</h1>
+          <p>Real-time statistics and user management</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="reloadAll()" id="refresh-btn">↻ Refresh</button>
+      </div>
+
+      <!-- Stat Tiles -->
+      <div class="stat-grid" id="stats-grid">
+        <!-- Populated by JS -->
+        <div class="stat-tile"><div class="stat-tile-icon purple">👥</div><div class="stat-tile-body"><div class="skeleton sk-val" style="margin-bottom:8px"></div><div class="stat-tile-label">Total Users</div></div></div>
+        <div class="stat-tile"><div class="stat-tile-icon green">📦</div><div class="stat-tile-body"><div class="skeleton sk-val" style="margin-bottom:8px"></div><div class="stat-tile-label">Total Inspections</div></div></div>
+        <div class="stat-tile"><div class="stat-tile-icon red">⚠️</div><div class="stat-tile-body"><div class="skeleton sk-val" style="margin-bottom:8px"></div><div class="stat-tile-label">Defective Parts</div></div></div>
+        <div class="stat-tile"><div class="stat-tile-icon amber">📄</div><div class="stat-tile-body"><div class="skeleton sk-val" style="margin-bottom:8px"></div><div class="stat-tile-label">Generated Reports</div></div></div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="admin-grid">
+
+        <!-- Defect Trends -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot red"></div>
+              Top Defect Types
+            </div>
+          </div>
+          <div class="panel-body" id="defect-panel">
+            <div class="skeleton sk-line"></div>
+            <div class="skeleton sk-line" style="width:80%"></div>
+            <div class="skeleton sk-line" style="width:60%"></div>
+          </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot purple"></div>
+              User Management
+            </div>
+            <span id="user-count" style="font-size:11px;color:#94a3b8;font-weight:600;"></span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="user-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Inspections</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:32px;font-size:13px;">Loading users…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /admin-grid -->
+
+    </div><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
 
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
-<script src="js/admin.js"></script>
-<script src="js/chatbot.js"></script>`n</body>
+<script>
+  checkAuth();
+  setupUserUI();
+
+  // ── Load Stats ────────────────────────────────────────────────
+  async function loadStats() {
+    try {
+      const res   = await apiFetch('/admin/stats');
+      const stats = res.data;
+
+      const grid = document.getElementById('stats-grid');
+      grid.innerHTML = `
+        <div class="stat-tile">
+          <div class="stat-tile-icon purple">👥</div>
+          <div class="stat-tile-body">
+            <div class="stat-tile-value">${stats.totalUsers ?? 0}</div>
+            <div class="stat-tile-label">Total Users</div>
+            <div class="stat-tile-sub">Active accounts</div>
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-icon green">📦</div>
+          <div class="stat-tile-body">
+            <div class="stat-tile-value">${stats.totalInspections ?? 0}</div>
+            <div class="stat-tile-label">Total Inspections</div>
+            <div class="stat-tile-sub">All time</div>
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-icon red">⚠️</div>
+          <div class="stat-tile-body">
+            <div class="stat-tile-value">${stats.totalDefective ?? 0}</div>
+            <div class="stat-tile-label">Defective Parts</div>
+            <div class="stat-tile-sub ${stats.totalDefective > 0 ? 'bad' : ''}">
+              ${stats.totalInspections > 0
+                ? Math.round((stats.totalDefective / stats.totalInspections) * 100) + '% failure rate'
+                : 'No data yet'}
+            </div>
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-tile-icon amber">📄</div>
+          <div class="stat-tile-body">
+            <div class="stat-tile-value">${stats.totalReports ?? 0}</div>
+            <div class="stat-tile-label">Generated Reports</div>
+            <div class="stat-tile-sub">Approx.</div>
+          </div>
+        </div>
+      `;
+
+      // Defect trends
+      const dp = document.getElementById('defect-panel');
+      if (!stats.defectTrends || stats.defectTrends.length === 0) {
+        dp.innerHTML = `<div class="state-empty">✅ No defects recorded yet</div>`;
+      } else {
+        const max = Math.max(...stats.defectTrends.map(t => t.count));
+        dp.innerHTML = stats.defectTrends.map(t => `
+          <div class="defect-row">
+            <div class="defect-meta">
+              <span>${t.defectType}</span>
+              <span>${t.count} occurrences</span>
+            </div>
+            <div class="defect-bar-track">
+              <div class="defect-bar-fill" style="width:${Math.round((t.count/max)*100)}%"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+    } catch (err) {
+      document.getElementById('stats-grid').innerHTML = `
+        <div class="stat-tile" style="grid-column:1/-1;">
+          <div class="state-error">
+            <div class="err-icon">⚠️</div>
+            <strong>Stats Unavailable</strong>
+            <p>${err.message}</p>
+            <button class="retry-btn" onclick="loadStats()">Try Again</button>
+          </div>
+        </div>`;
+      document.getElementById('defect-panel').innerHTML = `<div class="state-empty">Could not load defect data</div>`;
+    }
+  }
+
+  // ── Load Users ────────────────────────────────────────────────
+  async function loadUsers() {
+    const tbody = document.getElementById('users-tbody');
+    try {
+      const res   = await apiFetch('/admin/users');
+      const users = res.data || [];
+
+      document.getElementById('user-count').textContent = users.length + ' users';
+
+      if (users.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="state-empty">No users found</div></td></tr>`;
+        return;
+      }
+
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+
+      tbody.innerHTML = users.map(u => {
+        const isSelf = currentUser.username === u.username;
+        const initials = (u.fullName || u.username || '?').charAt(0).toUpperCase();
+
+        const roleBadge = u.role === 'ADMIN'
+          ? `<span class="badge-role admin">Admin</span>`
+          : `<span class="badge-role operator">Operator</span>`;
+
+        const statusBadge = u.isActive
+          ? `<span class="badge-status active">Active</span>`
+          : `<span class="badge-status inactive">Inactive</span>`;
+
+        const actionBtn = `<button class="toggle-btn" onclick="toggleUser(${u.id})" ${isSelf ? 'disabled title="Cannot disable yourself"' : ''}>
+            ${u.isActive ? 'Disable' : 'Enable'}
+          </button>`;
+
+        return `<tr>
+          <td>
+            <div class="user-avatar-cell">
+              <div class="user-avatar-mini">${initials}</div>
+              <div class="user-name-cell">
+                <strong>${u.username}</strong>
+                <span>${u.email || u.fullName || '—'}</span>
+              </div>
+            </div>
+          </td>
+          <td>${roleBadge}</td>
+          <td>${statusBadge}</td>
+          <td><strong>${u.totalInspections ?? 0}</strong></td>
+          <td>${actionBtn}</td>
+        </tr>`;
+      }).join('');
+
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5">
+        <div class="state-error">
+          <div class="err-icon">⚠️</div>
+          <strong>Could not load users</strong>
+          <p>${err.message}</p>
+          <button class="retry-btn" onclick="loadUsers()">Try Again</button>
+        </div>
+      </td></tr>`;
+    }
+  }
+
+  window.toggleUser = async function(userId) {
+    try {
+      await apiFetch(`/admin/users/${userId}/toggle`, { method: 'PUT' });
+      loadUsers();
+    } catch (err) {
+      alert('Failed to toggle user: ' + err.message);
+    }
+  };
+
+  function reloadAll() {
+    const btn = document.getElementById('refresh-btn');
+    btn.textContent = '↻ Refreshing…';
+    btn.disabled = true;
+    Promise.all([loadStats(), loadUsers()]).finally(() => {
+      btn.textContent = '↻ Refresh';
+      btn.disabled = false;
+    });
+  }
+
+  // Init
+  loadStats();
+  loadUsers();
+</script>
+<script src="js/chatbot.js"></script>
+</body>
 </html>
