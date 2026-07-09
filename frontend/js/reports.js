@@ -36,7 +36,7 @@ async function loadReports() {
         <td>${r.generatedBy}</td>
         <td class="text-muted" style="font-size:12px;">${dateStr}</td>
         <td>
-          <a href="http://localhost:3000/api/reports/download/${r.reportCode}" class="btn btn-ghost btn-sm" download>⬇️ Download</a>
+          <a href="/api/reports/download/${r.reportCode}" class="btn btn-ghost btn-sm" download>⬇️ Download</a>
         </td>
       `;
       tbody.appendChild(row);
