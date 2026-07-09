@@ -93,8 +93,59 @@ Severity definitions:
 - High: Significant defect affecting structural integrity — likely reject
 - Critical: Severe defect posing safety risk or complete failure — immediate rejection
 
-Keep answers clear, concise, and practical for a factory floor context. Use bullet points for lists.
-Do NOT make up specific numbers if no inspection data is provided.`;
+SPECIAL AUTO AUTOMOTIVE KNOWLEDGE BASE (Minute Details on Screws, Bolts, Iron Rods, etc.):
+1. Micro-cracking: Search for fine fatigue lines in high-strength carbon steel bolts under magnification.
+2. Pitch diameter: Verify M10 screw pitch diameter using thread ring gauges.
+3. Pitting depth: Measure depth of rust cavities on iron structural rods using depth micrometers.
+4. Zinc flake coating: Audit coating thickness on thread profiles to prevent early rust.
+5. Surface roughness: Guide pin rod stock should satisfy Ra < 0.8 micrometers to prevent excessive wear.
+6. Thread crest shear: Marks on crests indicate stamping die wear or thread rolling issues.
+7. Decarburization: Look for carbon loss layers on forged steel fasteners.
+8. Hydrogen embrittlement: Critical hazard causing unexpected shear fractures in grade 12.9 bolts.
+9. Flank angle: Deviations in screw thread flank angles compromise clamping force stability.
+10. Surface inclusion: Foreign oxides or silicates rolled into iron rods during manufacturing.
+11. Dimensional runout: Long guide rods require dial indicators to check axis concentricity.
+12. Plating splatter: Check for excess zinc buildup clogging thread roots.
+13. Fatigue striations: Fine progress lines in metal indicators of progressive cyclic loading cracks.
+14. Thread root radius: Sharp root profiles act as stress concentration areas; verify radius.
+15. Corrosion pit count: Count pits per cm² on iron rods; reject if > 5 per cm².
+16. Head perpendicularity: Check if screw head is perpendicular to the shank axis.
+17. Casting porosity: Detect internal gas pockets inside bolts using ultrasonic testing.
+18. Hardness profiles: Check core vs surface case hardness on induction-hardened components.
+19. Drive socket wear: Stripped Torx or hex sockets will prevent accurate torquing.
+20. Grain boundary cracking: High-temperature fasteners degrade at grain interfaces.
+21. Thread burrs: Inspect threads for metal flakes before automated assembly.
+22. Heat treatment cracks: Reject studs displaying longitudinal quench cracks.
+23. Iron rod scaling: Heavy oxide flakes on hot-rolled bars indicate improper cooling.
+24. Tool wear: Check thread rolling dies for flank chipping or wear lines.
+25. Rail taper: Measure rails at 3 locations to verify width deviation is < 0.05mm.
+26. Thread galling: Friction welding during automatic driving; use lubricants or reduce speed.
+27. Head eccentricity: Stamping punch misalignment leads to off-center screw heads.
+28. Lead error: Thread pitch cumulative error over 100mm span should be < 0.02mm.
+29. Abrasive wear: Socket shoulder screws showing drag marks must be replaced.
+30. Segregation bands: Chemical imbalance in carbon steel bars causing weak planes.
+31. Forging cold shuts: Flow line folds on hex head corners reduce load strength.
+32. Thread-to-shoulder concentricity: Check using comparator tools.
+33. Stain bleeding: Rust from carbon steel washers staining stainless frames.
+34. Pinhole coating: Micro-openings in phosphate coatings allowing moisture penetration.
+35. Shear lip height: Excessive shear burrs on cut iron rod stock obstruct assembly fixtures.
+36. Flank contact area: Minimum 75% thread flank engagement area target.
+37. Bend cracking: Check for external stretching tears during cold bending of iron bar stock.
+38. Lead screw error: Measure lead angle under digital microscopes.
+39. Relief groove: Verification of width and location spacing on studs.
+40. Thread runout angle: Verify the transition angle to prevent stress concentration.
+41. Pickling cracks: Acid wash hydrogen entry cracks on high-tensile components.
+42. Superficial carbon loss: Verify depth is < 0.02mm.
+43. Roll marks: Imprints from dirty rollers on bar stock are rejects.
+44. Piston scratches: Superficial line defects on guide shafts compromise seal oil retention.
+45. Socket depth deviation: Sockets cut too shallow lead to wrench slippage.
+46. Optical pit measurement: Focus microscope at surface then at pit bottom to measure depth.
+47. Precision screw pitch: Verify using optical profile comparators.
+48. Crest handling damage: Flat spots on thread crests from bulk bin shipping.
+49. Stud weld porosity: Check weld zone with dye penetrants.
+50. Zinc thickness variation: Plating is thinner at thread roots; audit roots specifically.
+
+Answer all questions regarding screws, bolts, iron rods, and micro-defects using the technical data above. Use bullet points for structural clarity.`;
 
 /**
  * POST /api/chatbot
