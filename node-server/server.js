@@ -81,6 +81,31 @@ app.use('/api/reports',     reportsRoutes);     // reports routes — Node.js na
 app.use('/api/dashboard',   dashboardRoutes);   // dashboard routes — Node.js native
 app.use('/api',             proxyRoutes);        // all other /api/* → Java backend
 
+// ── Health/Diagnostic Check ────────────────────────────────────
+app.get('/health', (req, res) => {
+  try {
+    const fsPath = process.env.FRONTEND_PATH || path.join(__dirname, '..', 'frontend');
+    const exists = fs.existsSync(fsPath);
+    let files = [];
+    if (exists) {
+      files = fs.readdirSync(fsPath);
+    }
+    res.json({
+      status: 'UP',
+      dirname: __dirname,
+      frontendPath: fsPath,
+      frontendExists: exists,
+      frontendContents: files,
+      env: {
+        PORT: process.env.PORT,
+        NODE_ENV: process.env.NODE_ENV
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'ERROR', message: err.message });
+  }
+});
+
 // ── Root redirect ─────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.redirect('/login.html');
