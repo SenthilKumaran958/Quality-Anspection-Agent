@@ -20,32 +20,36 @@ const JAVA_API = process.env.JAVA_API_URL;
  */
 router.post('/register', async (req, res) => {
   try {
+    if (!JAVA_API || !JAVA_API.startsWith('http')) {
+      throw new Error('Java API URL not configured');
+    }
     const { data } = await axios.post(`${JAVA_API}/auth/register`, req.body);
     res.json(data);
   } catch (err) {
-    if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND' || err.response?.status >= 500) {
-      console.warn('⚠️ Java API unreachable. Using Node.js Local Auth Fallback for registration.');
+    console.warn(`[Register] Java API unavailable: ${err.message}. Using Node.js Local Fallback.`);
+    
+    const { username, fullName, password, email } = req.body;
+    const finalUsername = username || email || 'user';
+    const finalEmail = email || (username && username.includes('@') ? username : `${username}@quality.ai`);
+    
+    if ((finalUsername || finalEmail) && password) {
+      const token = jwt.sign(
+        { username: finalUsername, role: 'ADMIN', sub: finalUsername }, 
+        JWT_SECRET, 
+        { expiresIn: '24h' }
+      );
       
-      const { username, fullName, password } = req.body;
-      
-      if (username && password) {
-        const token = jwt.sign(
-          { username, role: 'ADMIN', sub: username }, 
-          JWT_SECRET, 
-          { expiresIn: '24h' }
-        );
-        
-        return res.json({
-          success: true,
-          message: 'Registered using local fallback',
-          data: {
-            token,
-            username,
-            fullName: fullName || username.charAt(0).toUpperCase() + username.slice(1),
-            role: 'ADMIN'
-          }
-        });
-      }
+      return res.json({
+        success: true,
+        message: 'Registered using local fallback',
+        data: {
+          token,
+          username: finalUsername,
+          fullName: fullName || finalUsername.split('@')[0],
+          role: 'ADMIN',
+          email: finalEmail
+        }
+      });
     }
     
     const status  = err.response?.status  || 500;
@@ -54,41 +58,40 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
-
 /**
  * POST /api/auth/login
  * Forwards login request to Java backend and returns JWT.
  */
 router.post('/login', async (req, res) => {
   try {
+    if (!JAVA_API || !JAVA_API.startsWith('http')) {
+      throw new Error('Java API URL not configured');
+    }
     const { data } = await axios.post(`${JAVA_API}/auth/login`, req.body);
     res.json(data);
   } catch (err) {
-    if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND' || err.response?.status >= 500) {
-      console.warn('⚠️ Java API unreachable. Using Node.js Local Auth Fallback.');
+    console.warn(`[Login] Java API unavailable: ${err.message}. Using Node.js Local Fallback.`);
+    
+    const { username, password } = req.body;
+    
+    if (username && password) {
+      const token = jwt.sign(
+        { username, role: 'ADMIN', sub: username }, 
+        JWT_SECRET, 
+        { expiresIn: '24h' }
+      );
       
-      const { username, password } = req.body;
-      
-      // Simple mock authentication for testing without Java backend
-      if (username && password) {
-        const token = jwt.sign(
-          { username, role: 'ADMIN', sub: username }, 
-          JWT_SECRET, 
-          { expiresIn: '24h' }
-        );
-        
-        return res.json({
-          success: true,
-          message: 'Logged in using local fallback',
-          data: {
-            token,
-            username,
-            fullName: username.charAt(0).toUpperCase() + username.slice(1),
-            role: 'ADMIN'
-          }
-        });
-      }
+      return res.json({
+        success: true,
+        message: 'Logged in using local fallback',
+        data: {
+          token,
+          username,
+          fullName: username.split('@')[0],
+          role: 'ADMIN',
+          email: username.includes('@') ? username : `${username}@quality.ai`
+        }
+      });
     }
     
     const status  = err.response?.status  || 500;

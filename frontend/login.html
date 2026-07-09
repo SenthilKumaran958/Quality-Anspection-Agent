@@ -219,10 +219,10 @@
     <div class="form-panel active" id="panel-login">
       <form id="login-form">
         <div class="form-group">
-          <label class="form-label">Username</label>
+          <label class="form-label">Username or Email</label>
           <div class="input-icon-wrap">
             <span class="icon">👤</span>
-            <input type="text" id="login-username" class="form-control" placeholder="Enter your username" required autocomplete="username">
+            <input type="text" id="login-username" class="form-control" placeholder="Enter your username or email" required autocomplete="username">
           </div>
         </div>
         <div class="form-group">
@@ -247,10 +247,10 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="form-label">Username</label>
+          <label class="form-label">Email Address</label>
           <div class="input-icon-wrap">
-            <span class="icon">👤</span>
-            <input type="text" id="reg-username" class="form-control" placeholder="Choose a username" required autocomplete="username">
+            <span class="icon">✉️</span>
+            <input type="email" id="reg-email" class="form-control" placeholder="Enter your email address" required autocomplete="email">
           </div>
         </div>
         <div class="form-group">
@@ -323,13 +323,13 @@
     btn.disabled = true;
 
     const fullName = document.getElementById('reg-name').value;
-    const username = document.getElementById('reg-username').value;
+    const email    = document.getElementById('reg-email').value;
     const password = document.getElementById('reg-password').value;
 
     try {
       const data = await apiFetch('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({ username, password, fullName })
+        body: JSON.stringify({ username: email, email, password, fullName })
       });
       if (data.success) {
         localStorage.setItem('token', data.data.token);
