@@ -1213,7 +1213,7 @@ body.landing-page {
   gap: 12px;
   font-size: 20px;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #ffffff;
 }
 
 .landing-nav-links {
@@ -1372,14 +1372,15 @@ body.landing-page {
   height: 48px;
   background: var(--primary);
   color: white;
-  border-radius: 50%;
+  border-radius: 0px;
+  border: 2px solid #000;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0 auto 20px;
-  box-shadow: var(--shadow-glow);
+  box-shadow: 2px 2px 0 #000;
 }
 
 .step-icon {
@@ -1414,7 +1415,9 @@ body.landing-page {
 
 /* CTA Section */
 .cta-section {
-  background: var(--primary-light);
+  background: rgba(30, 41, 59, 0.85);
+  border-top: 2px solid #000000;
+  border-bottom: 2px solid #000000;
   padding: 80px 24px;
   text-align: center;
 }
@@ -1422,13 +1425,13 @@ body.landing-page {
 .cta-container h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-dark);
+  color: #ffffff;
   margin-bottom: 16px;
 }
 
 .cta-container p {
   font-size: 1.25rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 32px;
 }
 
