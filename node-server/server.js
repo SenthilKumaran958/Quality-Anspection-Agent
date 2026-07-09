@@ -56,7 +56,16 @@ app.use(morgan('dev'));
 // Serve the frontend — path goes one level up from node-server/ to frontend/
 const frontendPath = process.env.FRONTEND_PATH || path.join(__dirname, '..', 'frontend');
 console.log(`   Frontend served from: ${frontendPath}`);
-app.use(express.static(frontendPath));
+
+app.use(express.static(frontendPath, {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html') || path.endsWith('.css') || path.endsWith('.js')) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 // Serve uploaded images
 app.use('/uploads', express.static(uploadDir));
