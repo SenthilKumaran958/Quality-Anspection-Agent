@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
     
     if ((finalUsername || finalEmail) && password) {
       const token = jwt.sign(
-        { username: finalUsername, role: 'ADMIN', sub: finalUsername }, 
+        { username: finalUsername, role: 'USER', sub: finalUsername }, 
         JWT_SECRET, 
         { expiresIn: '24h' }
       );
@@ -46,7 +46,7 @@ router.post('/register', async (req, res) => {
           token,
           username: finalUsername,
           fullName: fullName || finalUsername.split('@')[0],
-          role: 'ADMIN',
+          role: 'USER',
           email: finalEmail
         }
       });
@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
     
     if (username && password) {
       const token = jwt.sign(
-        { username, role: 'ADMIN', sub: username }, 
+        { username, role: 'USER', sub: username }, 
         JWT_SECRET, 
         { expiresIn: '24h' }
       );
@@ -88,7 +88,7 @@ router.post('/login', async (req, res) => {
           token,
           username,
           fullName: username.split('@')[0],
-          role: 'ADMIN',
+          role: 'USER',
           email: username.includes('@') ? username : `${username}@quality.ai`
         }
       });
