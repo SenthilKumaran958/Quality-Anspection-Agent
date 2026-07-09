@@ -8,7 +8,7 @@
 // 3. Otherwise assume frontend and backend are on the same domain (same Render service)
 const API_BASE = (window.BACKEND_URL)
   ? `${window.BACKEND_URL}/api`
-  : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  : (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
     ? 'http://localhost:3001/api'
     : `${window.location.protocol}//${window.location.hostname}/api`;
 
