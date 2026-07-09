@@ -302,8 +302,8 @@
       });
 
       if (data.success) {
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
+        sessionStorage.setItem('token', data.data.token);
+        sessionStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
         window.location.href = 'dashboard.html';
       } else {
         showError(data.message || 'Login failed.');
@@ -332,8 +332,8 @@
         body: JSON.stringify({ username: email, email, password, fullName })
       });
       if (data.success) {
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
+        sessionStorage.setItem('token', data.data.token);
+        sessionStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
         window.location.href = 'dashboard.html';
       } else {
         showError(data.message || 'Registration failed.');
@@ -347,7 +347,7 @@
   });
 
   // If already logged in, go to dashboard
-  if (localStorage.getItem('token')) {
+  if (sessionStorage.getItem('token')) {
     window.location.href = 'dashboard.html';
   }
 </script>

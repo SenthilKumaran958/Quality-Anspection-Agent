@@ -447,7 +447,7 @@
     conversationHistory.push({ role: 'user', content: message });
 
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       const url = `${typeof API_BASE !== 'undefined' ? API_BASE : '/api'}/chatbot`;
       console.log('[Chatbot DEBUG] Sending to URL:', url);
       console.log('[Chatbot DEBUG] Token present:', !!token);
@@ -476,7 +476,7 @@
           setTyping(false);
           addMessage('bot', `⚠️ Your session has expired. Please <a href="/login.html">log in again</a> to use the chatbot.`);
           // Optionally auto-logout:
-          // localStorage.removeItem('token');
+          // sessionStorage.removeItem('token');
           // window.location.href = 'login.html';
           return;
         }

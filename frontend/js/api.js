@@ -19,7 +19,7 @@ const API_BASE = (window.BACKEND_URL)
  * Automatically handles 401 Unauthorized by redirecting to login.
  */
 async function apiFetch(endpoint, options = {}) {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   
   const headers = {
     ...options.headers,
@@ -66,7 +66,7 @@ async function apiFetch(endpoint, options = {}) {
 
 /** Check if user is logged in. If not, redirect to login page. */
 function checkAuth() {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const path = window.location.pathname;
   
   // Public paths that do NOT require auth
@@ -80,7 +80,7 @@ function checkAuth() {
 
 /** Check if current user is an admin. Redirect if not. */
 function checkAdmin() {
-  const userStr = localStorage.getItem('user');
+  const userStr = sessionStorage.getItem('user');
   if (!userStr) {
     window.location.href = 'login.html';
     return;
@@ -94,14 +94,14 @@ function checkAdmin() {
 
 /** Handle logout */
 function logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  sessionStorage.removeItem('token');
+  sessionStorage.removeItem('user');
   window.location.href = 'index.html'; // Redirect to landing page on logout
 }
 
 /** Setup UI with user info (sidebar, topbar) */
 function setupUserUI() {
-  const userStr = localStorage.getItem('user');
+  const userStr = sessionStorage.getItem('user');
   if (!userStr) return;
   const user = JSON.parse(userStr);
 

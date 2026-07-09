@@ -74,7 +74,7 @@ async function loadUsers() {
         : `<span class="badge badge-danger">INACTIVE</span>`;
 
       // Disable toggle/delete for the current logged-in user
-      const currentUser = JSON.parse(localStorage.getItem('user'));
+      const currentUser = JSON.parse(sessionStorage.getItem('user'));
       const isSelf = currentUser.username === user.username;
       
       const toggleBtn = `<button class="btn ${user.isActive ? 'btn-outline' : 'btn-primary'} btn-sm" onclick="toggleUser(${user.id})" ${isSelf ? 'disabled' : ''}>

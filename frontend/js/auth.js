@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   
   // If already logged in, redirect to dashboard
-  if (localStorage.getItem('token')) {
+  if (sessionStorage.getItem('token')) {
     window.location.href = 'dashboard.html';
     return;
   }
@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleAuthSuccess(userData) {
-  localStorage.setItem('token', userData.token);
-  localStorage.setItem('user', JSON.stringify(userData));
+  sessionStorage.setItem('token', userData.token);
+  sessionStorage.setItem('user', JSON.stringify(userData));
   
   showAlert('Authentication successful! Redirecting...', 'success', 'auth-alert');
   

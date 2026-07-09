@@ -10,7 +10,7 @@
   
   <script>
     // If user is already logged in with a valid token, redirect directly to dashboard
-    if (localStorage.getItem('token')) {
+    if (sessionStorage.getItem('token')) {
       window.location.href = 'dashboard.html';
     }
   </script>
