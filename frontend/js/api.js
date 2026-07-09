@@ -124,9 +124,22 @@ function setupUserUI() {
   if (roleEl2) roleEl2.textContent = user.role;
   if (avatarEl2 && user.fullName) avatarEl2.textContent = user.fullName.charAt(0).toUpperCase();
 
-  // Hide admin link if not admin
-  const adminLink = document.getElementById('nav-admin');
-  if (adminLink && user.role !== 'ADMIN') adminLink.style.display = 'none';
+  // Hide admin link & Management header if not admin
+  const adminLinks = document.querySelectorAll('a[href="admin.html"]');
+  adminLinks.forEach(link => {
+    if (user.role !== 'ADMIN') {
+      link.style.display = 'none';
+      // Hide the preceding section header label if present
+      let prev = link.previousElementSibling;
+      while (prev) {
+        if (prev.classList.contains('nav-section-label')) {
+          prev.style.display = 'none';
+          break;
+        }
+        prev = prev.previousElementSibling;
+      }
+    }
+  });
 }
 
 // Global utility for showing alerts

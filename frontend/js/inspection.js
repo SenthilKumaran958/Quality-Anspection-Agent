@@ -126,6 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
       btnAnalyze.textContent = '🔬 Re-Analyze Image';
       btnAnalyze.disabled = false;
 
+      // 5. Unconditionally trigger auto-save for seamless workflow
+      await autoSaveInspection(analysisData);
+
     } catch (err) {
       console.error('[Upload DEBUG] Fetch failed:', err);
       // Temporarily show full error details in UI
@@ -308,6 +311,49 @@ document.addEventListener('DOMContentLoaded', () => {
     resetResult();
     hideAlert();
   });
+
+  // ── Auto Save Inspection ──────────────────────────────────
+  async function autoSaveInspection(data) {
+    const ai = data.aiAnalysis;
+    const productCategory = ai.productCategory || 'General';
+    const productCode = 'AUTO';
+    const productName = ai.identifiedProduct || 'Metal Component';
+    
+    // Status mapping: 'Pass'/'Fail' -> 'GOOD'/'DEFECTIVE'
+    const status = ai.suggestedStatus === 'Needs Manual Review' ? 'Needs Manual Review' :
+                   ai.suggestedStatus === 'Fail' ? 'DEFECTIVE' : 'GOOD';
+                   
+    const defectType  = ai.defectType || 'None';
+    const severity    = ai.severity || 'None';
+    const description = ai.description || '';
+    const notes       = 'Automatically saved by system';
+
+    try {
+      await apiFetch('/inspections/save', {
+        method: 'POST',
+        body: JSON.stringify({
+          productCode, productName, status,
+          identifiedProduct: productName, productCategory,
+          imageUrl: data.imageUrl,
+          notes, confidence: ai.confidence,
+          aiAnalysis: { 
+            identifiedProduct: productName, productCategory,
+            defectDetected: status !== 'GOOD', 
+            defectType, severity, description, 
+            confidence: ai.confidence 
+          },
+          defects: status !== 'GOOD' ? [{ defectType, severity, description, bboxX:120,bboxY:150,bboxWidth:160,bboxHeight:120 }] : []
+        })
+      });
+
+      showAlert('✅ Inspection complete & automatically saved to history!', 'success');
+      setTimeout(() => { window.location.href = 'history.html'; }, 1600);
+
+    } catch (err) {
+      console.error('[Upload DEBUG] Auto-save failed:', err);
+      showAlert(`Auto-save failed: ${err.message}`, 'error');
+    }
+  }
 
   // ── Helpers ─────────────────────────────────────────────────
   function resetResult() {
