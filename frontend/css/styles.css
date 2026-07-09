@@ -1235,14 +1235,19 @@ body.landing-page {
   border-color: var(--text-muted);
 }
 
-/* Hero Section */
 .hero-section {
   position: relative;
   overflow: hidden;
-  background: var(--sidebar-bg);
+  background-color: #0b1120;
+  background-image: 
+    linear-gradient(to bottom, rgba(11, 17, 32, 0.75), rgba(11, 17, 32, 0.95)), 
+    url('../images/promo_bg.jpg');
+  background-size: cover;
+  background-position: center;
   color: white;
-  padding: 100px 24px;
+  padding: 120px 24px;
   text-align: center;
+  border-bottom: 2px solid #000;
 }
 
 .hero-content {
