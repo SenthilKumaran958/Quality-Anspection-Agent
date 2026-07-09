@@ -105,38 +105,45 @@
     /* Right panel */
     .login-right {
       width: 500px;
-      background: linear-gradient(160deg, #ffffff 0%, #f8faff 100%);
+      background-color: #0b0f19;
+      background-image: 
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.95)), 
+        url('images/console_bg.jpg');
+      background-size: cover;
+      background-position: center;
       display: flex; flex-direction: column; justify-content: center;
       padding: 60px 56px;
       overflow-y: auto;
-      border-left: 1px solid rgba(226,232,240,0.6);
-      box-shadow: -8px 0 40px rgba(0,0,0,0.08);
+      border-left: 2px solid #000000;
+      box-shadow: -8px 0 40px rgba(0,0,0,0.4);
     }
 
     .form-brand { margin-bottom: 36px; }
     .form-brand .brand-label { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
-    .form-brand h2 { font-size: 30px; font-weight: 800; color: #0f172a; }
-    .form-brand p  { font-size: 14px; color: #64748b; margin-top: 4px; }
+    .form-brand h2 { font-size: 30px; font-weight: 800; color: #ffffff; }
+    .form-brand p  { font-size: 14px; color: #94a3b8; margin-top: 4px; }
 
     .auth-tabs {
       display: flex;
-      background: #f1f5f9;
-      border-radius: 10px;
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 4px;
+      border: 2px solid #000000;
       padding: 4px;
       gap: 4px;
       margin-bottom: 28px;
+      box-shadow: 2px 2px 0 #000000;
     }
     .auth-tab {
       flex: 1; padding: 9px;
-      border-radius: 7px;
+      border-radius: 2px;
       font-size: 13.5px; font-weight: 600;
       color: #94a3b8;
       border: none; background: transparent; cursor: pointer;
       transition: all 0.2s;
     }
     .auth-tab.active {
-      background: #fff; color: #2563eb;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      background: #ffffff; color: #000000;
+      box-shadow: none;
     }
 
     .form-panel { display: none; }
@@ -159,26 +166,27 @@
       font-size: 15px;
     }
 
-    .form-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #64748b; }
+    .form-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #94a3b8; }
     .form-footer a { color: #2563eb; font-weight: 600; }
 
     .demo-box {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 2px solid #000000;
+      border-radius: 4px;
       padding: 14px 18px;
       margin-top: 24px;
       font-size: 12.5px;
-      color: #64748b;
+      color: #94a3b8;
+      box-shadow: 3px 3px 0 #000000;
     }
-    .demo-box strong { color: #0f172a; }
+    .demo-box strong { color: #ffffff; }
     .demo-cred { display: flex; justify-content: space-between; margin-top: 8px; gap: 8px; }
     .demo-chip {
-      flex: 1; background: #fff; border: 1px solid #e2e8f0;
-      border-radius: 7px; padding: 8px 12px; text-align: center;
+      flex: 1; background: rgba(15, 23, 42, 0.9); border: 2px solid #000000;
+      border-radius: 2px; padding: 8px 12px; text-align: center;
     }
     .demo-chip .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; }
-    .demo-chip .value { font-size: 13px; font-weight: 700; color: #0f172a; font-family: monospace; }
+    .demo-chip .value { font-size: 13px; font-weight: 700; color: #ffffff; font-family: monospace; }
 
     .err-alert {
       display: none;
