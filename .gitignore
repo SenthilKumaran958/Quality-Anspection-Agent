@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment variables
+.env
+.env.*
+
+# Database data
+mongo-data/
+
+# Uploaded files
+uploads/
+**/uploads/
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Java build artifacts
+java-backend/target/
+java-backend/*.zip
+java-backend/mvnw.zip
+java-backend/jdk17.zip
+java-backend/maven-wrapper-maven-wrapper-*/
+
+# Temp/scratch files
+temp_script.txt
+query
+fix_html.js
+fix_inspection.js
+fix_inspection2.js
+fix_inspection_exact.js
+test_ai.js
+test_ai_call.js
+test_chatbot.js
+test_gemini.js
+test_upload.js
+test_ai_recognition.js
+node-server/test.jpg
+node-server/java-mock.js
+node-server/ai-service.js

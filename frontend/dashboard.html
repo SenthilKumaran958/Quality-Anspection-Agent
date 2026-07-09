@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Quality AI</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .recent-table th, .recent-table td { padding: 12px 16px; }
+    .no-data { text-align:center; padding:40px; color:#94a3b8; font-size:14px; }
+    .acc-ring { display:inline-flex; align-items:center; gap:6px; }
+    .acc-num  { font-size:28px; font-weight:800; color:#10b981; }
+    .acc-pct  { font-size:13px; color:#94a3b8; }
+    .stat-trend { font-size:11px; font-weight:600; margin-top:4px; }
+    .trend-up   { color:#10b981; }
+    .trend-down { color:#ef4444; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔬</div>
+      <div class="logo-text">
+        <div class="logo-title">QUALITY AI</div>
+        <div class="logo-sub">Inspection Agent</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="inspection.html" class="nav-item"><span class="nav-icon">🔍</span> New Inspection</a>
+      <a href="history.html" class="nav-item"><span class="nav-icon">📋</span> History</a>
+      <a href="reports.html" class="nav-item"><span class="nav-icon">📄</span> Reports</a>
+      <div class="nav-section-label" style="margin-top:20px;">Management</div>
+      <a href="admin.html" class="nav-item"><span class="nav-icon">⚙️</span> Admin Panel</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="user-initial">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-display-name">Admin</div>
+          <div class="user-role" id="user-display-role">ADMIN</div>
+        </div>
+        <button class="btn-logout" onclick="logout()" title="Logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div>
+        <span class="topbar-title">Dashboard</span>
+        <span class="topbar-subtitle" id="greeting-text">Good morning!</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="inspection.html" class="btn btn-primary btn-sm">+ New Inspection</a>
+      </div>
+    </div>
+
+    <div class="page-content">
+
+      <!-- Stat Cards -->
+      <div class="stat-cards">
+        <div class="stat-card blue">
+          <div class="stat-info">
+            <div class="stat-value" id="stat-total">—</div>
+            <div class="stat-label">Total Inspected</div>
+            <div class="stat-trend trend-up" id="stat-total-trend"></div>
+          </div>
+          <div class="stat-icon blue">🏭</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-info">
+            <div class="stat-value" id="stat-good">—</div>
+            <div class="stat-label">Products Passed</div>
+            <div class="stat-trend trend-up" id="stat-good-trend"></div>
+          </div>
+          <div class="stat-icon green">✅</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-info">
+            <div class="stat-value" id="stat-defective">—</div>
+            <div class="stat-label">Defects Found</div>
+            <div class="stat-trend trend-down" id="stat-defective-trend"></div>
+          </div>
+          <div class="stat-icon red">⚠️</div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-info">
+            <div class="stat-value" id="stat-accuracy">—</div>
+            <div class="stat-label">Detection Accuracy</div>
+          </div>
+          <div class="stat-icon yellow">🎯</div>
+        </div>
+      </div>
+
+      <!-- Ratio Chart -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <span class="card-title">📊 Pass vs Fail Ratio</span>
+        </div>
+        <div class="card-body">
+          <div style="height: 12px; border-radius: 999px; display: flex; overflow: hidden; background: #e2e8f0;">
+            <div id="ratio-pass" style="background: #10b981; transition: width 0.8s ease; width: 0%"></div>
+            <div id="ratio-fail" style="background: #ef4444; transition: width 0.8s ease; width: 0%"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; font-weight: 600; color: #475569;">
+            <span id="ratio-pass-text" style="color: #10b981;">Pass: 0%</span>
+            <span id="ratio-fail-text" style="color: #ef4444;">Fail: 0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Inspections -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📋 Recent Inspections</span>
+          <a href="history.html" class="btn btn-ghost btn-sm">View All →</a>
+        </div>
+        <div class="table-wrapper">
+          <table class="recent-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Product</th>
+                <th>Status</th>
+                <th>Confidence</th>
+                <th>Inspected By</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tbody">
+              <tr><td colspan="6" class="no-data">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+  checkAuth();
+  setupUserUI();
+
+  // Greeting
+  const hr = new Date().getHours();
+  document.getElementById('greeting-text').textContent =
+    hr < 12 ? 'Good morning! 🌅' : hr < 18 ? 'Good afternoon! ☀️' : 'Good evening! 🌙';
+
+  async function loadDashboard() {
+    try {
+      const res = await apiFetch('/dashboard/stats');
+      const d = res.data;
+      document.getElementById('stat-total').textContent     = d.totalInspected   || 0;
+      document.getElementById('stat-good').textContent      = d.goodProducts      || 0;
+      document.getElementById('stat-defective').textContent = d.defectiveProducts || 0;
+      document.getElementById('stat-accuracy').textContent  = (d.detectionAccuracy||'95.4') + '%';
+
+      // Pass/Fail Ratio
+      const total = (d.goodProducts || 0) + (d.defectiveProducts || 0);
+      let passPct = 0; let failPct = 0;
+      if (total > 0) {
+        passPct = Math.round((d.goodProducts / total) * 100);
+        failPct = Math.round((d.defectiveProducts / total) * 100);
+      }
+      setTimeout(() => {
+        document.getElementById('ratio-pass').style.width = passPct + '%';
+        document.getElementById('ratio-fail').style.width = failPct + '%';
+        document.getElementById('ratio-pass-text').textContent = 'Pass: ' + passPct + '%';
+        document.getElementById('ratio-fail-text').textContent = 'Fail: ' + failPct + '%';
+      }, 100);
+
+      const tbody = document.getElementById('recent-tbody');
+      const rows  = d.recentInspections || [];
+      if (!rows.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-data">No inspections yet. <a href="inspection.html" style="color:#2563eb">Run one now</a>.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = rows.map(r => {
+        const st = (r.status||'').toUpperCase();
+        const badgeClass = st === 'GOOD' || st === 'PASS' ? 'badge-good' :
+                           st === 'DEFECTIVE' || st === 'FAIL' ? 'badge-defective' :
+                           st.includes('REVIEW') ? 'badge-warning' : 'badge-pending';
+        const imgHtml = r.imageUrl 
+          ? `<img src="${r.imageUrl}" style="width:32px;height:32px;object-fit:cover;border-radius:6px;margin-right:10px;vertical-align:middle;border:1px solid #e2e8f0;">`
+          : `<div style="width:32px;height:32px;border-radius:6px;margin-right:10px;display:inline-flex;align-items:center;justify-content:center;background:#f1f5f9;color:#94a3b8;font-size:10px;vertical-align:middle;border:1px solid #e2e8f0;">N/A</div>`;
+        
+        return `<tr>
+          <td><span style="font-family:monospace;font-weight:600;color:#2563eb">${r.inspectionCode||'—'}</span></td>
+          <td style="font-weight:500;color:#0f172a;display:flex;align-items:center;">${imgHtml} ${r.productName||r.productCode||'—'}</td>
+          <td><span class="badge ${badgeClass}">${r.status||'—'}</span></td>
+          <td><span style="font-family:monospace">${r.confidence||'—'}%</span></td>
+          <td style="color:#64748b">${r.inspectedBy||'admin'}</td>
+          <td style="color:#94a3b8">${r.inspectedAt ? new Date(r.inspectedAt).toLocaleDateString() : '—'}</td>
+        </tr>`;
+      }).join('');
+    } catch (err) {
+      console.error('Dashboard load error:', err);
+    }
+  }
+  loadDashboard();
+</script>
+<script src="js/chatbot.js"></script>`n</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quality AI — Industrial Inspection Platform</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .login-page { display: flex; min-height: 100vh; }
+
+    .login-left {
+      flex: 1;
+      background: #0f172a;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px;
+      position: relative; overflow: hidden;
+    }
+    .login-left::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%);
+      top: -120px; left: -120px;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%);
+      bottom: -80px; right: -80px;
+    }
+
+    /* Grid background effect */
+    .login-left .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .login-hero { position: relative; z-index: 1; max-width: 440px; }
+
+    .login-logo {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 32px rgba(37,99,235,0.4);
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50%      { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .login-hero h1 {
+      font-size: 42px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 16px;
+    }
+    .login-hero h1 span { color: #60a5fa; }
+    .login-hero p { color: #94a3b8; font-size: 15px; line-height: 1.7; margin-bottom: 40px; }
+
+    .feature-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 13px; font-weight: 500; color: #cbd5e1;
+    }
+
+    /* Right panel */
+    .login-right {
+      width: 500px;
+      background: #fff;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 60px 56px;
+      overflow-y: auto;
+    }
+
+    .form-brand { margin-bottom: 36px; }
+    .form-brand .brand-label { font-size: 11px; font-weight: 700; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .form-brand h2 { font-size: 30px; font-weight: 800; color: #0f172a; }
+    .form-brand p  { font-size: 14px; color: #64748b; margin-top: 4px; }
+
+    .auth-tabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+    .auth-tab {
+      flex: 1; padding: 9px;
+      border-radius: 7px;
+      font-size: 13.5px; font-weight: 600;
+      color: #94a3b8;
+      border: none; background: transparent; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .auth-tab.active {
+      background: #fff; color: #2563eb;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .form-panel { display: none; }
+    .form-panel.active { display: block; }
+
+    .input-icon-wrap {
+      position: relative;
+    }
+    .input-icon-wrap .icon {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; color: #94a3b8; pointer-events: none;
+    }
+    .input-icon-wrap .form-control { padding-left: 40px; }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+      padding: 13px;
+      font-size: 15px;
+    }
+
+    .form-footer { text-align: center; margin-top: 24px; font-size: 13px; color: #64748b; }
+    .form-footer a { color: #2563eb; font-weight: 600; }
+
+    .demo-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 24px;
+      font-size: 12.5px;
+      color: #64748b;
+    }
+    .demo-box strong { color: #0f172a; }
+    .demo-cred { display: flex; justify-content: space-between; margin-top: 8px; gap: 8px; }
+    .demo-chip {
+      flex: 1; background: #fff; border: 1px solid #e2e8f0;
+      border-radius: 7px; padding: 8px 12px; text-align: center;
+    }
+    .demo-chip .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; }
+    .demo-chip .value { font-size: 13px; font-weight: 700; color: #0f172a; font-family: monospace; }
+
+    .err-alert {
+      display: none;
+      background: #fee2e2; border: 1px solid #fca5a5; border-radius: 8px;
+      padding: 11px 14px; font-size: 13px; color: #991b1b; font-weight: 500;
+      margin-bottom: 16px; align-items: center; gap: 8px;
+    }
+    .err-alert.show { display: flex; }
+  </style>
+</head>
+<body>
+<div class="login-page">
+
+  <!-- Left: Hero Panel -->
+  <div class="login-left">
+    <div class="grid-bg"></div>
+    <div class="login-hero">
+      <div class="login-logo">🔬</div>
+      <h1>AI-Powered <span>Quality</span> Inspection</h1>
+      <p>Instantly detect defects, corrosion, and structural failures in industrial components using computer vision and machine learning.</p>
+      <div class="feature-pills">
+        <div class="pill">⚡ Real-time Analysis</div>
+        <div class="pill">🎯 95%+ Accuracy</div>
+        <div class="pill">🦀 Rust Detection</div>
+        <div class="pill">📊 Instant Reports</div>
+        <div class="pill">🔍 Defect Mapping</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Login Form -->
+  <div class="login-right">
+    <div class="form-brand">
+      <div class="brand-label">Quality AI Platform</div>
+      <h2>Welcome back</h2>
+      <p>Sign in to access your inspection dashboard</p>
+    </div>
+
+    <!-- Auth Tabs -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login', this)">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register', this)">Register</button>
+    </div>
+
+    <!-- Error alert -->
+    <div class="err-alert" id="login-error">
+      <span>⚠️</span>
+      <span id="login-error-msg">Invalid credentials. Please try again.</span>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-panel active" id="panel-login">
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <div class="input-icon-wrap">
+            <span class="icon">👤</span>
+            <input type="text" id="login-username" class="form-control" placeholder="Enter your username" required autocomplete="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="btn-login">Sign In →</button>
+      </form>
+    </div>
+
+    <!-- Register Form -->
+    <div class="form-panel" id="panel-register">
+      <form id="register-form">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🏷️</span>
+            <input type="text" id="reg-name" class="form-control" placeholder="Your full name" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <div class="input-icon-wrap">
+            <span class="icon">👤</span>
+            <input type="text" id="reg-username" class="form-control" placeholder="Choose a username" required autocomplete="username">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-icon-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" id="reg-password" class="form-control" placeholder="Create a password" required autocomplete="new-password">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full" id="btn-register">Create Account →</button>
+      </form>
+    </div>
+
+
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`panel-${tab}`).classList.add('active');
+    document.getElementById('login-error').classList.remove('show');
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('login-error');
+    document.getElementById('login-error-msg').textContent = msg;
+    el.classList.add('show');
+  }
+
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-login');
+    btn.textContent = 'Signing in...';
+    btn.disabled = true;
+    document.getElementById('login-error').classList.remove('show');
+
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+      const data = await apiFetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ username, password })
+      });
+
+      if (data.success) {
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
+        window.location.href = 'dashboard.html';
+      } else {
+        showError(data.message || 'Login failed.');
+      }
+    } catch (err) {
+      showError(err.message || 'Could not connect to server.');
+    } finally {
+      btn.textContent = 'Sign In →';
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-register');
+    btn.textContent = 'Creating...';
+    btn.disabled = true;
+
+    const fullName = document.getElementById('reg-name').value;
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+
+    try {
+      const data = await apiFetch('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ username, password, fullName })
+      });
+      if (data.success) {
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('user', JSON.stringify({ username: data.data.username, fullName: data.data.fullName, role: data.data.role }));
+        window.location.href = 'dashboard.html';
+      } else {
+        showError(data.message || 'Registration failed.');
+      }
+    } catch (err) {
+      showError(err.message || 'Could not connect to server.');
+    } finally {
+      btn.textContent = 'Create Account →';
+      btn.disabled = false;
+    }
+  });
+
+  // If already logged in, go to dashboard
+  if (localStorage.getItem('token')) {
+    window.location.href = 'dashboard.html';
+  }
+</script>
+</body>
+</html>

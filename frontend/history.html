@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History — Quality Inspection Agent</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app-layout">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔍</div>
+      <div class="logo-text">
+        <span class="logo-title">QUALITY AI</span>
+        <span class="logo-sub">Inspection Agent</span>
+      </div>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="inspection.html" class="nav-item">
+        <span class="nav-icon">📸</span> New Inspection
+      </a>
+      <a href="history.html" class="nav-item active">
+        <span class="nav-icon">📋</span> History
+      </a>
+      <a href="reports.html" class="nav-item">
+        <span class="nav-icon">📄</span> Reports
+      </a>
+      
+      <div class="nav-section-label" style="margin-top: 16px;">Management</div>
+      <a href="admin.html" class="nav-item" id="nav-admin">
+        <span class="nav-icon">⚙️</span> Admin Panel
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="sidebar-user-avatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-user-name">Loading...</div>
+          <div class="user-role" id="sidebar-user-role">...</div>
+        </div>
+        <button class="btn-logout" id="btn-logout" title="Logout">🚪</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-title">Inspection History</div>
+    </header>
+    
+    <!-- Page Content -->
+    <div class="page-content">
+      
+      <div class="card">
+        <div class="card-header border-bottom pb-3">
+          <div class="filters-bar" style="margin-bottom:0;">
+            <div class="search-input-wrap">
+              <span class="search-icon">🔍</span>
+              <input type="text" class="form-control" id="filter-search" placeholder="Search by Code or Product...">
+            </div>
+            
+            <select class="form-control" id="filter-status" style="width: 150px;">
+              <option value="">All Statuses</option>
+              <option value="GOOD">GOOD</option>
+              <option value="DEFECTIVE">DEFECTIVE</option>
+            </select>
+            
+            <input type="date" class="form-control" id="filter-from" style="width: 150px;">
+            <span class="text-muted">to</span>
+            <input type="date" class="form-control" id="filter-to" style="width: 150px;">
+            
+            <button class="btn btn-primary" id="btn-filter">Filter</button>
+            <button class="btn btn-ghost" id="btn-reset">Reset</button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Product</th>
+                  <th>Status</th>
+                  <th>Defects</th>
+                  <th>Confidence</th>
+                  <th>Inspected By</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body">
+                <tr><td colspan="8" class="text-center text-muted py-4">Loading data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination mt-4">
+            <button class="page-btn" id="page-prev">←</button>
+            <div id="page-numbers" class="d-flex gap-2"></div>
+            <button class="page-btn" id="page-next">→</button>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+  </main>
+</div>
+
+<!-- Modal: View Details -->
+<div class="modal-backdrop" id="detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Inspection Details</div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- Injected by JS -->
+      <div class="text-center text-muted">Loading...</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/history.js"></script>
+<script src="js/chatbot.js"></script>`n</body>
+</html>

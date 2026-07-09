@@ -1,0 +1,10 @@
+{
+  "name": "quality-inspection-agent-root",
+  "version": "1.0.0",
+  "description": "Root package.json to proxy Render build/start commands to the node-server directory",
+  "scripts": {
+    "install": "cd node-server && npm install",
+    "build": "cd node-server && npm install",
+    "start": "cd node-server && npm start"
+  }
+}

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Inspection — Quality AI</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .inspection-layout {
+      display: grid;
+      grid-template-columns: 480px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Upload Zone */
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      background: #f8fafc;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      min-height: 200px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .dropzone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; width: 100%; height: 100%;
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: #2563eb; background: #eff6ff;
+    }
+    .dz-icon { font-size: 44px; margin-bottom: 14px; }
+    .dz-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .dz-sub   { font-size: 12px; color: #94a3b8; }
+    .dz-link  { color: #2563eb; font-weight: 600; text-decoration: underline; }
+
+    /* Image Preview */
+    .img-preview-wrap {
+      display: none;
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      background: #000;
+      max-height: 340px;
+    }
+    .img-preview-wrap.show { display: block; }
+
+    .img-preview {
+      width: 100%;
+      max-height: 340px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .bbox-layer {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+
+    .img-overlay-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+      padding: 12px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .img-filename { color: #fff; font-size: 12px; font-weight: 500; }
+    .img-size     { color: #94a3b8; font-size: 11px; }
+
+    /* Result Panel States */
+    .result-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 20px; text-align: center;
+    }
+    .result-empty .em-icon { font-size: 56px; opacity: 0.3; margin-bottom: 12px; }
+    .result-empty .em-title { font-size: 16px; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .result-empty .em-desc  { font-size: 13px; color: #94a3b8; max-width: 240px; line-height: 1.6; }
+
+    /* AI Status Card */
+    .ai-status-card {
+      border-radius: 14px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ai-status-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: currentColor; opacity: 0.05;
+    }
+
+    .ai-status-card.pass   { border: 2px solid #86efac; }
+    .ai-status-card.fail   { border: 2px solid #fca5a5; }
+    .ai-status-card.review { border: 2px solid #fcd34d; }
+
+    .status-emoji { font-size: 40px; display: block; margin-bottom: 8px; }
+    .status-label {
+      font-size: 24px; font-weight: 900; letter-spacing: 2.5px; display: block; margin-bottom: 6px;
+    }
+    .ai-status-card.pass   .status-label { color: #15803d; }
+    .ai-status-card.fail   .status-label { color: #b91c1c; }
+    .ai-status-card.review .status-label { color: #92400e; }
+
+    .status-rec { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #64748b; }
+
+    /* Confidence */
+    .conf-wrap { margin-top: 16px; text-align: left; }
+    .conf-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .conf-key { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: #94a3b8; }
+    .conf-val { font-size: 13px; font-weight: 800; color: #0f172a; font-family: monospace; }
+    .conf-track {
+      height: 10px; background: rgba(0,0,0,0.08); border-radius: 100px; overflow: hidden;
+    }
+    .conf-bar {
+      height: 100%; border-radius: 100px; width: 0%; transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+    .conf-bar.green  { background: linear-gradient(90deg, #10b981, #34d399); }
+    .conf-bar.red    { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .conf-bar.yellow { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+    /* Defect list */
+    .defects-section { margin-top: 18px; }
+    .defects-header {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+      color: #94a3b8; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .defect-row {
+      background: #fef2f2; border: 1px solid #fca5a5; border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 8px;
+    }
+    .defect-row .dt  { font-size: 13.5px; font-weight: 700; color: #991b1b; }
+    .defect-row .dd  { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.5; }
+
+    /* Processing spinner */
+    .analyzing-state {
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 20px; gap: 16px;
+    }
+    .analyzing-state.show { display: flex; }
+    .analyzing-brain { font-size: 52px; animation: pulse 1.1s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.12);opacity:0.6} }
+    .progress-pill { background: #f1f5f9; border-radius: 100px; width: 200px; height: 6px; overflow: hidden; }
+    .progress-fill {
+      height: 100%; background: linear-gradient(90deg,#2563eb,#06b6d4);
+      border-radius: 100px; animation: sweep 1.6s ease-in-out infinite;
+    }
+    @keyframes sweep {
+      0%   { width:0%;  margin-left:0;   }
+      50%  { width:70%; margin-left:15%; }
+      100% { width:0%;  margin-left:100%;}
+    }
+    .analyzing-label { font-size: 14px; font-weight: 600; color: #475569; }
+    .analyzing-sub   { font-size: 12px; color: #94a3b8; }
+
+    /* Inspector review */
+    .review-box {
+      display: none;
+      background: #f8fafc; border: 1.5px solid #e2e8f0;
+      border-radius: 14px; padding: 20px;
+      margin-top: 20px;
+    }
+    .review-box.show { display: block; }
+    .review-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+      color: #2563eb; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Alert banner */
+    .alert-bar {
+      display: none; padding: 11px 16px; border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .alert-bar.show { display: flex; }
+    .alert-bar.error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+    .alert-bar.success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+
+    @media (max-width: 900px) {
+      .inspection-layout { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🔬</div>
+      <div class="logo-text">
+        <div class="logo-title">QUALITY AI</div>
+        <div class="logo-sub">Inspection Agent</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <a href="dashboard.html" class="nav-item"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="inspection.html" class="nav-item active"><span class="nav-icon">🔍</span> New Inspection</a>
+      <a href="history.html" class="nav-item"><span class="nav-icon">📋</span> History</a>
+      <a href="reports.html" class="nav-item"><span class="nav-icon">📄</span> Reports</a>
+      <div class="nav-section-label" style="margin-top:20px;">Management</div>
+      <a href="admin.html" class="nav-item"><span class="nav-icon">⚙️</span> Admin Panel</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar" id="user-initial">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-display-name">Admin</div>
+          <div class="user-role" id="user-display-role">ADMIN</div>
+        </div>
+        <button class="btn-logout" onclick="logout()" title="Logout">↩</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <div class="topbar">
+      <div>
+        <span class="topbar-title">New Inspection</span>
+        <span class="topbar-subtitle">Upload & analyze product images with AI</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost btn-sm" id="btn-reset">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div id="alert-bar" class="alert-bar"></div>
+
+      <div class="inspection-layout">
+
+        <!-- LEFT: Upload + Form -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📦 Product Setup</span>
+            </div>
+            <div class="card-body">
+              <form id="inspection-form">
+
+                <div class="form-group">
+                  <label class="form-label">Product Image</label>
+
+                  <!-- Dropzone -->
+                  <div class="dropzone" id="dropzone">
+                    <input type="file" id="image-input" accept="image/*">
+                    <div class="dz-icon">🖼️</div>
+                    <div class="dz-title">Drop image here or <span class="dz-link">browse</span></div>
+                    <div class="dz-sub">Supports JPG, PNG, WEBP up to 10MB</div>
+                  </div>
+
+                  <!-- Preview -->
+                  <div class="img-preview-wrap" id="preview-wrap">
+                    <img class="img-preview" id="preview-img" src="" alt="Preview">
+                    <div class="bbox-layer" id="bbox-layer"></div>
+                    <div class="img-overlay-bottom">
+                      <span class="img-filename" id="preview-filename"></span>
+                      <span class="img-size" id="preview-size"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btn-analyze" style="width:100%;justify-content:center;padding:13px;" disabled>
+                  🔬 Run AI Analysis
+                </button>
+              </form>
+
+              <!-- Inspector Review Box -->
+              <div class="review-box" id="review-box">
+                <div class="review-title">✏️ Inspector Review</div>
+                <div class="review-grid">
+                  <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-control" id="review-status">
+                      <option value="GOOD">✅ Pass (GOOD)</option>
+                      <option value="DEFECTIVE">❌ Fail (DEFECTIVE)</option>
+                      <option value="Needs Manual Review">🔍 Needs Review</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Severity</label>
+                    <select class="form-control" id="review-severity">
+                      <option value="None">None</option>
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Defect Type</label>
+                  <input type="text" class="form-control" id="review-defect-type" placeholder="e.g. Surface Crack, Rust">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Description</label>
+                  <textarea class="form-control" id="review-description" rows="3" placeholder="AI-generated description..."></textarea>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Inspector Notes</label>
+                  <textarea class="form-control" id="review-notes" rows="2" placeholder="Additional observations..."></textarea>
+                </div>
+                <button class="btn btn-success" id="btn-save" style="width:100%;justify-content:center;padding:12px;font-size:15px;">
+                  💾 Save Inspection Record
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: AI Result Panel -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">🤖 AI Analysis Result</span>
+            <span id="analysis-badge" class="badge badge-pending" style="display:none;"></span>
+          </div>
+          <div class="card-body" id="result-container">
+
+            <!-- Empty state -->
+            <div class="empty-state" id="result-empty">
+              <div class="empty-icon">🔬</div>
+              <div class="empty-title">Awaiting Analysis</div>
+              <div class="empty-desc">Upload a product image and click "Run AI Analysis" to detect defects.</div>
+            </div>
+
+            <!-- Analyzing state -->
+            <div class="ai-processing" id="result-processing">
+              <div class="ai-brain">🧠</div>
+              <div style="margin-bottom:8px;">
+                <div class="empty-title" style="margin-bottom:2px;">AI Model Analyzing...</div>
+                <div class="empty-desc">Examining surface quality & defects</div>
+              </div>
+              <div class="ai-progress-bar"><div class="ai-progress-fill"></div></div>
+            </div>
+
+            <!-- Result state -->
+            <div id="result-panel" style="display:none;">
+              <!-- Detected Product Info -->
+              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
+                <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:4px;">Auto-Detected Product</div>
+                <div id="rs-detected-product" style="font-size:15px; font-weight:700; color:#0f172a;"></div>
+                <div id="rs-product-category" style="font-size:12px; color:#475569; margin-top:2px;"></div>
+              </div>
+
+              <!-- Status Card -->
+              <div class="ai-status-card" id="rs-card">
+                <span class="status-emoji" id="rs-icon">✅</span>
+                <span class="status-label" id="rs-status">GOOD</span>
+                <span class="status-rec" id="rs-rec">Recommendation: ACCEPT</span>
+                <div class="conf-wrap">
+                  <div class="conf-header">
+                    <span class="conf-key">AI Confidence Score</span>
+                    <span class="conf-val" id="conf-val">98%</span>
+                  </div>
+                  <div class="conf-track">
+                    <div class="conf-bar green" id="conf-bar"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Detected Defects -->
+              <div class="defects-section">
+                <div class="defects-header">
+                  <span>⚡</span> Detected Defects
+                </div>
+                <div id="defects-list"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loader">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loader"></div>
+</div>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/inspection.js"></script>
+<script src="js/chatbot.js"></script>
+</body>
+</html>

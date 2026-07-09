@@ -1,0 +1,27 @@
+services:
+  # Node.js server — serves BOTH the API and the static frontend
+  - type: web
+    name: quality-inspection-agent
+    runtime: node
+    region: oregon
+    plan: free
+    rootDir: node-server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 24h
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: MAX_FILE_SIZE_MB
+        value: 10
+      - key: ALLOWED_TYPES
+        value: image/jpeg,image/png,image/webp,image/gif
+      - key: GEMINI_API_KEY
+        value: YOUR_GEMINI_API_KEY_HERE
