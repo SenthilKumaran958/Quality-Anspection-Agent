@@ -2,56 +2,56 @@
    QUALITY AI — Premium Industrial Design System v2
    ═══════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* ── CSS Variables ───────────────────────────────────────── */
 :root {
-  --primary:       #2563eb;
+  --primary:       #3b82f6;
   --primary-dark:  #1d4ed8;
   --primary-light: #dbeafe;
   --accent:        #06b6d4;
 
-  --success:       #10b981;
+  --success:       #22c55e;
   --success-light: #d1fae5;
   --danger:        #ef4444;
   --danger-light:  #fee2e2;
-  --warning:       #f59e0b;
+  --warning:       #eab308;
   --warning-light: #fef3c7;
-  --info:          #8b5cf6;
+  --info:          #a855f7;
   --info-light:    #ede9fe;
 
   --bg:            #eef2f9;
   --surface:       #ffffff;
   --surface-alt:   #f8fafc;
-  --border:        #e2e8f0;
-  --border-focus:  #2563eb;
+  --border:        #000000;
+  --border-focus:  #3b82f6;
 
   --text-primary:  #0f172a;
-  --text-secondary:#475569;
-  --text-muted:    #94a3b8;
+  --text-secondary:#334155;
+  --text-muted:    #64748b;
 
-  --sidebar-bg:    #0b1120;
+  --sidebar-bg:    #0f172a;
   --sidebar-text:  #cbd5e1;
-  --sidebar-active:#2563eb;
+  --sidebar-active:#3b82f6;
 
-  --shadow-sm:     0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-  --shadow-md:     0 8px 24px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-lg:     0 12px 32px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-glow:   0 0 20px rgba(37,99,235,0.15);
+  --shadow-sm:     2px 2px 0 #000;
+  --shadow-md:     4px 4px 0 #000;
+  --shadow-lg:     6px 6px 0 #000;
+  --shadow-glow:   0 0 10px rgba(59,130,246,0.3);
 
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 999px;
+  --radius-sm: 0px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 4px;
+  --radius-full: 0px;
 
   --sidebar-w: 240px;
   --topbar-h:  64px;
 
-  --font: 'Inter', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font: 'VT323', monospace;
+  --font-mono: 'VT323', monospace;
 
-  --transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+  --transition: none; /* Instant retro transitions */
 }
 
 /* ── Reset ───────────────────────────────────────────────── */

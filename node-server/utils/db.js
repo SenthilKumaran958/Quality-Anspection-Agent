@@ -22,4 +22,6 @@ function isConnected() {
   return mongoConnected;
 }
 
-module.exports = { connectDB, isConnected };
+const memoryInspections = [];
+
+module.exports = { connectDB, isConnected, memoryInspections };

@@ -20,6 +20,7 @@ const inspectionRoutes = require('./routes/inspection');
 const chatbotRoutes    = require('./routes/chatbot');
 const adminRoutes      = require('./routes/admin');
 const reportsRoutes    = require('./routes/reports');
+const dashboardRoutes  = require('./routes/dashboard');
 const proxyRoutes      = require('./routes/proxy');
 const { connectDB }    = require('./utils/db');
 
@@ -77,6 +78,7 @@ app.use('/api/inspections', inspectionRoutes);
 app.use('/api/chatbot',     chatbotRoutes);
 app.use('/api/admin',       adminRoutes);       // admin routes — Node.js native
 app.use('/api/reports',     reportsRoutes);     // reports routes — Node.js native
+app.use('/api/dashboard',   dashboardRoutes);   // dashboard routes — Node.js native
 app.use('/api',             proxyRoutes);        // all other /api/* → Java backend
 
 // ── Root redirect ─────────────────────────────────────────────

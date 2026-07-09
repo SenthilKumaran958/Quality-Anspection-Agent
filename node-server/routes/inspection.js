@@ -6,13 +6,10 @@ const axios   = require('axios');
 const { requireAuth } = require('../middleware/auth');
 const { upload }      = require('../middleware/upload');
 const { analyzeImageWithAI } = require('../utils/vision');
-const { isConnected } = require('../utils/db');
+const { isConnected, memoryInspections } = require('../utils/db');
 const Inspection = require('../models/Inspection');
 
 const JAVA_API = process.env.JAVA_API_URL;
-
-// In-memory fallback database
-let memoryInspections = [];
 
 /**
  * 1. POST /api/inspections/analyze
