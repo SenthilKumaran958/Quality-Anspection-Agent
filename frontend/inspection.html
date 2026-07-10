@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Inspection — Quality AI</title>
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
   <style>
     .inspection-layout {
       display: grid;
@@ -15,9 +15,9 @@
 
     /* Upload Zone */
     .dropzone {
-      border: 2px dashed #cbd5e1;
-      border-radius: 14px;
-      background: #f8fafc;
+      border: 1.5px dashed rgba(148,163,184,0.35);
+      border-radius: 12px;
+      background: rgba(30, 41, 59, 0.6);
       padding: 40px 20px;
       text-align: center;
       cursor: pointer;
@@ -30,12 +30,12 @@
       position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 2; width: 100%; height: 100%;
     }
     .dropzone:hover, .dropzone.drag-over {
-      border-color: #2563eb; background: #eff6ff;
+      border-color: #3b82f6; background: rgba(37,99,235,0.12);
     }
     .dz-icon { font-size: 44px; margin-bottom: 14px; }
-    .dz-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
-    .dz-sub   { font-size: 12px; color: #94a3b8; }
-    .dz-link  { color: #2563eb; font-weight: 600; text-decoration: underline; }
+    .dz-title { font-size: 15px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+    .dz-sub   { font-size: 12px; color: #64748b; }
+    .dz-link  { color: #60a5fa; font-weight: 600; text-decoration: underline; }
 
     /* Image Preview */
     .img-preview-wrap {
@@ -111,9 +111,9 @@
     .conf-wrap { margin-top: 16px; text-align: left; }
     .conf-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
     .conf-key { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.7px; color: #94a3b8; }
-    .conf-val { font-size: 13px; font-weight: 800; color: #0f172a; font-family: monospace; }
+    .conf-val { font-size: 13px; font-weight: 800; color: #e2e8f0; font-family: monospace; }
     .conf-track {
-      height: 10px; background: rgba(0,0,0,0.08); border-radius: 100px; overflow: hidden;
+      height: 10px; background: rgba(255,255,255,0.1); border-radius: 100px; overflow: hidden;
     }
     .conf-bar {
       height: 100%; border-radius: 100px; width: 0%; transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
@@ -160,14 +160,14 @@
     /* Inspector review */
     .review-box {
       display: none;
-      background: #f8fafc; border: 1.5px solid #e2e8f0;
-      border-radius: 14px; padding: 20px;
+      background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(148,163,184,0.2);
+      border-radius: 12px; padding: 20px;
       margin-top: 20px;
     }
     .review-box.show { display: block; }
     .review-title {
       font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
-      color: #2563eb; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+      color: #60a5fa; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
     }
     .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -341,10 +341,10 @@
             <!-- Result state -->
             <div id="result-panel" style="display:none;">
               <!-- Detected Product Info -->
-              <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:16px;">
+              <div style="background:rgba(30,41,59,0.7); border:1px solid rgba(148,163,184,0.2); border-radius:8px; padding:12px; margin-bottom:16px;">
                 <div style="font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; margin-bottom:4px;">Auto-Detected Product</div>
-                <div id="rs-detected-product" style="font-size:15px; font-weight:700; color:#0f172a;"></div>
-                <div id="rs-product-category" style="font-size:12px; color:#475569; margin-top:2px;"></div>
+                <div id="rs-detected-product" style="font-size:15px; font-weight:700; color:#f1f5f9;"></div>
+                <div id="rs-product-category" style="font-size:12px; color:#94a3b8; margin-top:2px;"></div>
               </div>
 
               <!-- Status Card -->
